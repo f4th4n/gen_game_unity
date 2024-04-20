@@ -29,7 +29,6 @@ _UpgradeReport_Files/
 *.build.csdef
 *.Cache
 *.cachefile
-*.csproj
 *.dbmdl
 *.DotSettings.user
 *.gpState
