@@ -13,7 +13,7 @@ var sessionToken = await client.AuthenticateDeviceAsync(deviceId);
 
 ```cs
 
-// create GenGame client
+// connect to GenGame server and then return a client
 var client = new Client("localhost", 4000);
 
 // create user and authenticate it
@@ -30,4 +30,11 @@ game.OnRelay += new Game.OnRelayHandler((dynamic payload) =>
 
 // dispatch event relay to all player in the same match with some payload
 await game.Relay(new { move_x = 110 });
+```
+
+## Test Without Unity
+
+```bash
+dotnet build gen_game_unity.csproj
+dotnet run gen_game_unity.csproj
 ```
