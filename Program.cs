@@ -1,49 +1,28 @@
-﻿Console.WriteLine("Connected");
+﻿using GenGame;
 
-// using System.Net.WebSockets;
-// using System.Text;
+public class Program
+{
+  static async Task Main(string[] args)
+  {
+    Start();
+    Thread.Sleep(2000);
+  }
 
-// var genGame = new GenGame.GenGame();
+  private static async void Start()
+  {
 
-// Console.WriteLine("Connected");
+    var client = new Client("localhost", 4000);
 
-// // join channel
-// var message = """
-// [
-//     "1",
-//     "1",
-//     "public",
-//     "phx_join",
-//     {}
-// ]
-// """;
-// var buffer = Encoding.UTF8.GetBytes(message);
-// await ws.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+    await client.AuthenticateDeviceAsync("dev-123");
+    // await client.Ping();
 
+    Game game = await client.CreateMatch();
 
-// var receiveBuffer = new byte[1024];
-// var receiveResult = await ws.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
-// var receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count);
+    game.OnRelay += new Game.OnRelayHandler((dynamic payload) =>
+    {
+      Console.WriteLine($"there is relay: {payload["move_x"]}");
+    });
 
-// Console.WriteLine($"Received message: {receivedMessage}");
-
-// // create session
-// message = """
-// [
-//     123,
-//     null,
-//     "public",
-//     "create_session",
-//     {
-//         "username": "wildan"
-//     }
-// ]
-// """;
-// buffer = Encoding.UTF8.GetBytes(message);
-// await ws.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
-
-// receiveBuffer = new byte[1024];
-// receiveResult = await ws.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
-// receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count);
-
-// Console.WriteLine($"Received message: {receivedMessage}");
+    await game.Relay(new { move_x = 110 });
+  }
+}
