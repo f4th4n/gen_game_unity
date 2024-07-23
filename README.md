@@ -1,8 +1,10 @@
 # GenGame Unity
 
-This is C# client library to communicate with GenServer. It can be used for both generic C# project and Unity.
+This is C# client library to communicate with [GenGame server](https://github.com/f4th4n/gen_game). It can be used for both generic C# project and Unity.
 
 # Getting Started
+
+First, make sure GenGame server is started. See how to start [here](https://github.com/f4th4n/gen_game#getting-started).
 
 ```cs
 
