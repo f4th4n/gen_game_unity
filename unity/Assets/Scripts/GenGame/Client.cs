@@ -47,6 +47,11 @@ namespace GenGame
             return await Game.CreateMatch(Connection, Match);
         }
 
+        public async Task JoinMatch(string matchId)
+        {
+            await Game.JoinMatch(Connection, Match, matchId);
+        }
+
         public async Task SetState(dynamic Payload)
         {
             await Game.SetState(Connection, Match, Payload);

@@ -3,19 +3,19 @@ using GenGame;
 
 public class Program
 {
-  static async Task Main(string[] args)
+  static void Main(string[] args)
   {
-    Start();
+    _ = StartProgram();
     Thread.Sleep(2000);
   }
 
-  private static async void Start()
+  private static async Task StartProgram()
   {
-    CreateMatch();
-    Console.WriteLine("✅ all test passed");
+    var match = await CreateMatch();
+    await JoinMatch(match);
   }
 
-  private static async void CreateMatch()
+  private static async Task<Match> CreateMatch()
   {
     var genGame = new Client("localhost", 4000);
     genGame.Connect();
@@ -29,10 +29,21 @@ public class Program
 
     genGame.OnChangeState((dynamic payload) =>
     {
-      Console.WriteLine($"there is update state with payload: {payload["move_x"]}");
-      Console.WriteLine("test success");
+      Console.WriteLine($"    there is update state with payload: {payload["chat"]}");
     });
 
-    await genGame.SetState(new { move_x = 110 });
+    await genGame.SetState(new { chat = "hi, from player 1" });
+
+    return match;
+  }
+
+  private static async Task JoinMatch(Match match)
+  {
+    var genGame = new Client("localhost", 4000);
+    genGame.Connect();
+
+    await genGame.AuthenticateDevice("dev-456");
+    await genGame.JoinMatch(match.MatchId);
+    await genGame.SetState(new { chat = "hi, from player 2" });
   }
 }

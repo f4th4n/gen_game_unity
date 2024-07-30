@@ -4,7 +4,7 @@ namespace GenGame
   {
     static public async Task<String> AuthenticateDevice(Connection connection, String deviceId)
     {
-      await Connection.JoinTopic(connection, "public");
+      await Connection.JoinChannel(connection, "public");
       var res = await Connection.Request(connection, "public", "create_session", new { username = deviceId });
       var token = res.Payload.response.token;
       connection.SessionToken = token;

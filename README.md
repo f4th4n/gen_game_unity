@@ -23,21 +23,36 @@ var resPing = await genGame.Ping();
 Debug.Assert(resPing == "pong");
 
 // create match and return GenGame.Game object
-Match match = await genGame.CreateMatch();
+Match match = await genGame.CreateMatch();  // <---- save this match.MatchId somewhere so you can let other player join this game
 
 // add callback OnChangeState, called when there is state update event
 genGame.OnChangeState((dynamic payload) =>
 {
-    Console.WriteLine($"there is update state with payload: {payload["move_x"]}");
+    Console.WriteLine($"there is update state with payload: {payload["chat"]}");
     Console.WriteLine("test success");
 });
 
-await genGame.SetState(new { move_x = 110 });
+await genGame.SetState(new { chat = "hi, from player 1" });
+```
+
+Let the 2nd player join the match:
+
+```cs
+var genGame = new Client("localhost", 4000);
+genGame.Connect();
+
+await genGame.AuthenticateDevice("dev-456");
+
+// join a game
+await genGame.JoinMatch("some-match-id");
+
+await genGame.SetState({ chat: "hi, from player 2" })
+
 ```
 
 ## Test Without Unity
 
 ```bash
-dotnet build gen_game_unity.csproj
-dotnet run gen_game_unity.csproj
+dotnet build
+dotnet run
 ```

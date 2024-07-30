@@ -27,12 +27,12 @@ namespace GenGame
 
     static public async Task<string> Ping(Connection connection)
     {
-      await JoinTopic(connection, "public");
-      var res = await Connection.Request(connection, "public", "ping", new { });
+      await JoinChannel(connection, "public");
+      var res = await Request(connection, "public", "ping", new { });
       return res.Payload.response;
     }
 
-    static public async Task JoinTopic(Connection connection, String topicName, object payload = null)
+    static public async Task JoinChannel(Connection connection, String topicName, object payload = null)
     {
       if (connection.joinedTopics.Contains(topicName))
       {
@@ -41,8 +41,8 @@ namespace GenGame
 
       payload ??= new { };
 
-      var resJoinTopic = await Connection.Request(connection, topicName, "phx_join", payload, true);
-      if (resJoinTopic.TopicName != topicName && resJoinTopic.Payload.status != "ok")
+      var resJoinChannel = await Request(connection, topicName, "phx_join", payload, true);
+      if (resJoinChannel.TopicName != topicName && resJoinChannel.Payload.status != "ok")
       {
         throw new Exception("cannot join topic");
       }
@@ -50,9 +50,9 @@ namespace GenGame
       connection.joinedTopics.Add(topicName);
     }
 
-    static public async Task<PhxChannelResponse> Request(Connection connection, String topicName, String eventName, object payload, Boolean isTypeJoin = false, Boolean waitResponse = true)
+    static public async Task<PhxChannelResponse> Request(Connection connection, String topicName, String eventName, object payload, Boolean isJoiningChannel = false, Boolean waitResponse = true)
     {
-      if (isTypeJoin)
+      if (isJoiningChannel)
       {
         connection.JoinRefCounter++;
         connection.TopicRef[topicName] = connection.JoinRefCounter;
