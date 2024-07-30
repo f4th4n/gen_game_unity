@@ -7,6 +7,8 @@ public class Program
   {
     _ = StartProgram();
     Thread.Sleep(2000);
+
+    Console.WriteLine("if you see 'update state: hi, from player $n' above this line two times then it works ✅");
   }
 
   private static async Task StartProgram()
@@ -29,7 +31,7 @@ public class Program
 
     genGame.OnChangeState((dynamic payload) =>
     {
-      Console.WriteLine($"    there is update state with payload: {payload["chat"]}");
+      Console.WriteLine($"update state: {payload["chat"]}");
     });
 
     await genGame.SetState(new { chat = "hi, from player 1" });
@@ -43,7 +45,11 @@ public class Program
     genGame.Connect();
 
     await genGame.AuthenticateDevice("dev-456");
-    await genGame.JoinMatch(match.MatchId);
+
+    string lastMatchId = await genGame.GetLastMatchId();
+    Debug.Assert(match.MatchId == lastMatchId);
+
+    await genGame.JoinMatch(lastMatchId);
     await genGame.SetState(new { chat = "hi, from player 2" });
   }
 }

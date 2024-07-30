@@ -52,6 +52,11 @@ namespace GenGame
             await Game.JoinMatch(Connection, Match, matchId);
         }
 
+        public async Task<string> GetLastMatchId()
+        {
+            return await Game.GetLastMatchId(Connection);
+        }
+
         public async Task SetState(dynamic Payload)
         {
             await Game.SetState(Connection, Match, Payload);

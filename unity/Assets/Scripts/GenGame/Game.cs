@@ -37,6 +37,20 @@ namespace GenGame
             match.MatchId = matchId;
         }
 
+        static public async Task<string> GetLastMatchId(Connection connection)
+        {
+            await Connection.JoinChannel(connection, "gen_game", new { token = connection.SessionToken });
+            var res = await Connection.Request(connection, "gen_game", "get_last_match_id", new { });
+            if (res.Payload.status == "error")
+            {
+                throw new Exception((string)res.Payload.response);
+            }
+
+            var matchId = (string)res.Payload.response;
+
+            return matchId;
+        }
+
         static public async Task SetState(Connection connection, Match match, dynamic payload)
         {
             var topic = Topic(match.MatchId);

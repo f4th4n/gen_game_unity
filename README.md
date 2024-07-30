@@ -44,7 +44,8 @@ genGame.Connect();
 await genGame.AuthenticateDevice("dev-456");
 
 // join a game
-await genGame.JoinMatch("some-match-id");
+string matchId = genGame.GetLastMatchId();
+await genGame.JoinMatch(matchId);
 
 await genGame.SetState({ chat: "hi, from player 2" })
 
