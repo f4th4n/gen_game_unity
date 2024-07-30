@@ -1,4 +1,5 @@
-﻿using GenGame;
+﻿using System.Diagnostics;
+using GenGame;
 
 public class Program
 {
@@ -10,19 +11,28 @@ public class Program
 
   private static async void Start()
   {
+    CreateMatch();
+    Console.WriteLine("✅ all test passed");
+  }
 
-    var client = new Client("localhost", 4000);
+  private static async void CreateMatch()
+  {
+    var genGame = new Client("localhost", 4000);
+    genGame.Connect();
 
-    await client.AuthenticateDeviceAsync("dev-123");
-    // await client.Ping();
+    await genGame.AuthenticateDevice("dev-123");
+    var resPing = await genGame.Ping();
 
-    Game game = await client.CreateMatch();
+    Debug.Assert(resPing == "pong");
 
-    game.OnRelay += new Game.OnRelayHandler((dynamic payload) =>
+    Match match = await genGame.CreateMatch();
+
+    genGame.OnChangeState((dynamic payload) =>
     {
-      Console.WriteLine($"there is relay: {payload["move_x"]}");
+      Console.WriteLine($"there is update state with payload: {payload["move_x"]}");
+      Console.WriteLine("test success");
     });
 
-    await game.Relay(new { move_x = 110 });
+    await genGame.SetState(new { move_x = 110 });
   }
 }

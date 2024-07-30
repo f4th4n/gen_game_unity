@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace GenGame
 {
     public class Game
@@ -7,37 +5,41 @@ namespace GenGame
         private String matchId;
         private Client client;
 
-        public delegate void OnRelayHandler(dynamic something);
-        public event OnRelayHandler OnRelay;
-
-        public Game(String argMatchId, Client argClient)
-        {
-            matchId = argMatchId;
-            client = argClient;
-
-            client.Ws.OnMessage += (sender, e) =>
-            {
-                // Logging
-                var deserializedData = JsonConvert.DeserializeObject<IEnumerable<object>>(e.Data);
-                var res = new PhxChannelResponse(deserializedData);
-                if (res.EventName == "relay" && OnRelay != null)
-                {
-                    OnRelay(res.Payload);
-                }
-            };
-        }
-
-        public async Task<String> Relay(object payload)
+        public async Task<String> Relay(Connection connection, object payload)
         {
             var topic = Topic();
-            await client.JoinTopic(topic, new { token = client.SessionToken });
-            var res = await client.Request(topic, "set_state", payload, false, false);
-            Console.WriteLine("res.Payload");
-            Console.WriteLine(res.Payload);
-            return "test";
+            await Connection.JoinTopic(connection, topic, new { token = connection.SessionToken });
+            await Connection.Request(connection, topic, "set_state", payload, false, false);
+            return "ok";
         }
 
-        private String Topic()
+        static public async Task<Match> CreateMatch(Connection connection, Match match)
+        {
+            // TODO add arg query
+            await Connection.JoinTopic(connection, "gen_game", new { token = connection.SessionToken });
+            var res = await Connection.Request(connection, "gen_game", "create_match", new { });
+            if (res.Payload.status == "error")
+            {
+                throw new Exception((string)res.Payload.response);
+            }
+
+            match.MatchId = (string)res.Payload.response.match_id;
+            return match;
+        }
+
+        static public async Task SetState(Connection connection, Match match, dynamic payload)
+        {
+            var topic = Topic(match.MatchId);
+            await Connection.JoinTopic(connection, topic, new { token = connection.SessionToken });
+            await Connection.Request(connection, topic, "set_state", payload);
+        }
+
+        public string Topic()
+        {
+            return $"game:{matchId}";
+        }
+
+        static public string Topic(string matchId)
         {
             return $"game:{matchId}";
         }

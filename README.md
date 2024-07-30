@@ -8,6 +8,8 @@ First, make sure GenGame server is started. See how to start [here](https://gith
 
 ```cs
 
+using GenGame;
+
 // connect to GenGame server and then return a client
 var client = new Client("localhost", 4000);
 
@@ -17,10 +19,10 @@ await client.AuthenticateDeviceAsync("dev-123");
 // create match and return GenGame.Game object
 Game game = await client.CreateMatch();
 
-// add callback OnRelay, called when there is on-relay event
-game.OnRelay += new Game.OnRelayHandler((dynamic payload) =>
+// add callback OnChangeState, called when there is on-relay event
+game.OnChangeState += new Game.OnChangeStateHandler((dynamic payload) =>
 {
-    Console.WriteLine($"there is relay: {payload["move_x"]}");
+    Console.WriteLine($"there is update state with payload: {payload["move_x"]}");
 });
 
 // dispatch event relay to all player in the same match with some payload
