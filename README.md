@@ -10,23 +10,29 @@ First, make sure GenGame server is started. See how to start [here](https://gith
 
 using GenGame;
 
-// connect to GenGame server and then return a client
-var client = new Client("localhost", 4000);
+// connect to GenGame server and then return a single object
+// that used to communicate with the server
+var genGame = new Client("localhost", 4000);
+genGame.Connect();
 
 // create user and authenticate it
-await client.AuthenticateDeviceAsync("dev-123");
+await genGame.AuthenticateDevice("dev-123");
+
+// try to ping to the server
+var resPing = await genGame.Ping();
+Debug.Assert(resPing == "pong");
 
 // create match and return GenGame.Game object
-Game game = await client.CreateMatch();
+Match match = await genGame.CreateMatch();
 
-// add callback OnChangeState, called when there is on-relay event
-game.OnChangeState += new Game.OnChangeStateHandler((dynamic payload) =>
+// add callback OnChangeState, called when there is state update event
+genGame.OnChangeState((dynamic payload) =>
 {
     Console.WriteLine($"there is update state with payload: {payload["move_x"]}");
+    Console.WriteLine("test success");
 });
 
-// dispatch event relay to all player in the same match with some payload
-await game.Relay(new { move_x = 110 });
+await genGame.SetState(new { move_x = 110 });
 ```
 
 ## Test Without Unity
