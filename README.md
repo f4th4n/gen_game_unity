@@ -4,7 +4,10 @@ This is C# client library to communicate with [GenGame server](https://github.co
 
 # Getting Started
 
-First, make sure GenGame server is started. See how to start [here](https://github.com/f4th4n/gen_game#getting-started).
+1. Make sure GenGame server is started. See how to start [here](https://github.com/f4th4n/gen_game#getting-started)
+2. Download dll from [release](https://github.com/f4th4n/gen_game_unity/releases) page
+3. Unarchive it, then put it all dll files to your unity project
+4. Then you can start using GenGame, see example below:
 
 ```cs
 
@@ -51,3 +54,7 @@ await genGame.JoinMatch(matchId);
 await genGame.SetState({ chat: "hi, from player 2" })
 
 ```
+
+## Build Yourself
+
+If you want to build yourself, see [this doc](/dev.md) for more detail.
