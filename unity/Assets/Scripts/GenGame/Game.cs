@@ -1,11 +1,14 @@
+using System;
+using System.Threading.Tasks;
+
 namespace GenGame
 {
     public class Game
     {
-        private String matchId;
+        private string matchId;
         private Client client;
 
-        public async Task<String> Relay(Connection connection, object payload)
+        public async Task<string> Relay(Connection connection, object payload)
         {
             var topic = Topic();
             await Connection.JoinChannel(connection, topic, new { token = connection.SessionToken });
