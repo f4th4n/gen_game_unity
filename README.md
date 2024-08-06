@@ -9,6 +9,7 @@ First, make sure GenGame server is started. See how to start [here](https://gith
 ```cs
 
 using GenGame;
+using System.Diagnostics;
 
 // connect to GenGame server and then return a single object
 // that used to communicate with the server
@@ -49,11 +50,4 @@ await genGame.JoinMatch(matchId);
 
 await genGame.SetState({ chat: "hi, from player 2" })
 
-```
-
-## Test Without Unity
-
-```bash
-dotnet build
-dotnet run
 ```
