@@ -1,19 +1,22 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace GenGame
 {
     public class PhxChannelResponse
     {
         public long? JoinRef;
         public long? MessageRef;
-        public String TopicName;
-        public String EventName;
+        public string TopicName;
+        public string EventName;
         public dynamic Payload;
 
         public PhxChannelResponse(IEnumerable<object> data)
         {
             JoinRef = (long?)data.ElementAt(0);
             MessageRef = (long?)data.ElementAt(1);
-            TopicName = (String)data.ElementAt(2);
-            EventName = (String)data.ElementAt(3);
+            TopicName = (string)data.ElementAt(2);
+            EventName = (string)data.ElementAt(3);
             Payload = data.ElementAt(4);
         }
 
