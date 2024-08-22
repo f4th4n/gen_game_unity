@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -30,9 +31,9 @@ namespace GenGame
             };
         }
 
-        public void Connect()
+        public async Task Connect()
         {
-            Connection.Connect(Connection);
+            await Connection.Connect(Connection);
         }
 
         public async Task<string> AuthenticateDevice(string deviceId)

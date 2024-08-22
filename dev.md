@@ -48,7 +48,7 @@ using GenGame;
 // connect to GenGame server and then return a single object
 // that used to communicate with the server
 var genGame = new Client("localhost", 4000);
-genGame.Connect();
+await genGame.Connect();
 
 // create user and authenticate it
 await genGame.AuthenticateDevice("dev-123");

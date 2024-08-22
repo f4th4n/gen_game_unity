@@ -25,9 +25,17 @@ namespace GenGame
       Ws = new WebSocket($"ws://{host}:{port}/game/websocket?vsn=2.0.0");
     }
 
-    static public void Connect(Connection connection)
+    static public async Task<int> Connect(Connection connection)
     {
+      var tcs = new TaskCompletionSource<int>();
+      connection.Ws.OnOpen += (sender, e) =>
+      {
+        tcs.SetResult(1);
+      };
+
       connection.Ws.Connect();
+
+      return await tcs.Task;
     }
 
     static public async Task<string> Ping(Connection connection)
